@@ -17,9 +17,9 @@ const SHOW_REASONING = false;
 const ENABLE_THINKING_MODE = false; 
 
 const MODEL_MAPPING = {
-  'pro': 'deepseek-ai/deepseek-v4-flash',
-  'glm': 'z-ai/glm-5.2',
-  'flash': 'nvidia/nemotron-3-ultra-550b-a55b'
+  'pro': 'N/A',
+  'glm': 'z-ai/glm-5.3',
+  'flash': 'deepseek-ai/deepseek-v4-flash-0731'
 };
 
 app.get('/health', (req, res) => {
