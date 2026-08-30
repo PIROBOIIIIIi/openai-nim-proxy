@@ -18,7 +18,7 @@ const ENABLE_THINKING_MODE = false;
 
 const MODEL_MAPPING = {
   'pro': 'deepseek-ai/deepseek-v4-pro-0813',
-  'glm': 'z-ai/glm-5.3',
+  'glm': 'moonshotai/kimi-k3',
   'flash': 'deepseek-ai/deepseek-v4-flash-0731'
 };
 
