@@ -51,9 +51,14 @@ app.post('/v1/chat/completions', async (req, res) => {
     
     const nimModel = MODEL_MAPPING[model] || model;
     
+    const cleanMessages = messages.map(msg => ({
+      role: msg.role,
+      content: msg.content || " "
+    }));
+
     const nimRequest = {
       model: nimModel,
-      messages: messages,
+      messages: cleanMessages,
       temperature: temperature || 0.6,
       max_tokens: max_tokens || 9024,
       extra_body: ENABLE_THINKING_MODE ? { chat_template_kwargs: { thinking: true } } : undefined,
@@ -69,7 +74,6 @@ app.post('/v1/chat/completions', async (req, res) => {
     });
     
     if (stream) {
-
       res.setHeader('Content-Type', 'text/event-stream');
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('Connection', 'keep-alive');
@@ -171,11 +175,14 @@ app.post('/v1/chat/completions', async (req, res) => {
     }
     
   } catch (error) {
-    console.error('Proxy error:', error.message);
+    const apiError = error.response?.data?.error?.message || error.response?.data || error.message || 'Internal server error';
+    const finalErrorMessage = typeof apiError === 'string' ? apiError : JSON.stringify(apiError);
+    
+    console.error('Proxy error:', finalErrorMessage);
     
     res.status(error.response?.status || 500).json({
       error: {
-        message: error.message || 'Internal server error',
+        message: finalErrorMessage,
         type: 'invalid_request_error',
         code: error.response?.status || 500
       }
