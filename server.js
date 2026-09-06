@@ -178,7 +178,11 @@ app.post('/v1/chat/completions', async (req, res) => {
 
     if (error.response && error.response.data) {
       if (typeof error.response.data.pipe === 'function') {
-        finalErrorMessage = `NVIDIA API Error ${error.response.status}: Request rejected. Verify if your context strictly exceeds this model's maximum limit.`;
+        if (error.response.status === 429) {
+          finalErrorMessage = "NVIDIA API Error 429: Rate limit exceeded. You have either run out of API credits or hit your Tokens-Per-Minute (TPM) limit.";
+        } else {
+          finalErrorMessage = `NVIDIA API Error ${error.response.status}: Request rejected. The payload is invalid or strictly exceeds the context limit.`;
+        }
       } else {
         const apiError = error.response.data.error?.message || error.response.data;
         finalErrorMessage = typeof apiError === 'string' ? apiError : JSON.stringify(apiError);
