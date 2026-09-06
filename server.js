@@ -13,7 +13,6 @@ const NIM_API_BASE = process.env.NIM_API_BASE || 'https://integrate.api.nvidia.c
 const NIM_API_KEY = process.env.NIM_API_KEY;
 
 const SHOW_REASONING = false; 
-
 const ENABLE_THINKING_MODE = false; 
 
 const MODEL_MAPPING = {
@@ -51,7 +50,7 @@ app.post('/v1/chat/completions', async (req, res) => {
     
     const nimModel = MODEL_MAPPING[model] || model;
     
-    const cleanMessages = messages.map(msg => ({
+    const cleanMessages = (messages || []).map(msg => ({
       role: msg.role,
       content: msg.content || " "
     }));
@@ -175,8 +174,16 @@ app.post('/v1/chat/completions', async (req, res) => {
     }
     
   } catch (error) {
-    const apiError = error.response?.data?.error?.message || error.response?.data || error.message || 'Internal server error';
-    const finalErrorMessage = typeof apiError === 'string' ? apiError : JSON.stringify(apiError);
+    let finalErrorMessage = error.message || 'Internal server error';
+
+    if (error.response && error.response.data) {
+      if (typeof error.response.data.pipe === 'function') {
+        finalErrorMessage = `NVIDIA API Error ${error.response.status}: Request rejected. Verify if your context strictly exceeds this model's maximum limit.`;
+      } else {
+        const apiError = error.response.data.error?.message || error.response.data;
+        finalErrorMessage = typeof apiError === 'string' ? apiError : JSON.stringify(apiError);
+      }
+    }
     
     console.error('Proxy error:', finalErrorMessage);
     
@@ -201,8 +208,5 @@ app.all('*', (req, res) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`OpenAI to NVIDIA NIM Proxy running on port ${PORT}`);
-  console.log(`Health check: http://localhost:${PORT}/health`);
-  console.log(`Reasoning display: ${SHOW_REASONING ? 'ENABLED' : 'DISABLED'}`);
-  console.log(`Thinking mode: ${ENABLE_THINKING_MODE ? 'ENABLED' : 'DISABLED'}`);
+  console.log(`Proxy running on port ${PORT}`);
 });
