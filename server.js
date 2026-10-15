@@ -18,7 +18,7 @@ const ENABLE_THINKING_MODE = false;
 const MODEL_MAPPING = {
   'glm_pro': 'z-ai/glm-5.3',
   'glm_flash': 'z-ai/glm-5.3-flash',
-  'deepseek_flash': 'deepseek-ai/deepseek-v4.1-flash'
+  'deepseek_flash': 'deepseek-ai/deepseek-v4.1-flash',
   'stepfun': 'stepfun-ai/step-5-preview'
 };
 
