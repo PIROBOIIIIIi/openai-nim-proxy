@@ -16,9 +16,9 @@ const SHOW_REASONING = false;
 const ENABLE_THINKING_MODE = false; 
 
 const MODEL_MAPPING = {
-  'glm_pro': 'z-ai/glm-5.3',
-  'glm_flash': 'z-ai/glm-5.3-flash',
-  'deepseek_flash': 'deepseek-ai/deepseek-v4.1-flash',
+  'kimi': 'moonshotai/kimi-k3.1-pro',
+  'glm': 'z-ai/glm-5.3-flash',
+  'deepseek_flash': 'N/A',
   'stepfun': 'stepfun-ai/step-5-preview'
 };
 
